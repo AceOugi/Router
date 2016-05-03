@@ -4,5 +4,17 @@
     "require": {
         "php": "^7.0",
         "psr/http-message-implementation": "*"
+    },
+    "require-dev": {
+        "zendframework/zend-diactoros": "*"
+    },
+    "suggest": {
+        "aceougi/runner": "middleware runner"
+    },
+    "autoload": {
+        "classmap": [
+            "src/Router.php",
+            "src/RouterSpecifier.php"
+        ]
     }
 }
