@@ -85,19 +85,18 @@ class Router
     }
 
     /**
-     * @todo add submap system (THIS SYSTEM IS A DEMO, DONT USE IT)
      * @param string $pattern
      * @param callable[] ...$callables
      * @return Router
      */
     public function group(string $pattern, ...$callables) : Router
     {
-        $map = new Router();
-        $callables[] = $map;
+        $router = new Router();
+        $callables[] = $router;
 
-        $this->map($pattern, ...$callables);
+        $this->any($pattern, ...$callables);
 
-        return $map;
+        return $router;
     }
 
     /**
