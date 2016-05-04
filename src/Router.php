@@ -8,87 +8,80 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Router
 {
     /** @var array */
-    protected $map = []; // ['pattern', 'callables', 'method', ...]
+    protected $map = []; //TODO: import/export
 
     /**
+     * @param string $methods
      * @param string $pattern
      * @param callable[] ...$callables
-     * @return RouterSpecifier
      */
-    public function map(string $pattern, ...$callables) : RouterSpecifier
+    public function map(string $methods, string $pattern, ...$callables)
     {
-        $route = ['pattern' => $pattern, 'callables' => $callables];
-        return new RouterSpecifier($this->map[] =&$route);
+        foreach (explode('|', $methods) as $method)
+            $this->map[$method][] = ['pattern' => $pattern, 'callables' => $callables];
     }
 
     /**
      * @param string $pattern
      * @param callable[] ...$callables
-     * @return RouterSpecifier
      */
-    public function any(string $pattern, ...$callables) : RouterSpecifier
+    public function any(string $pattern, ...$callables)
     {
-        return $this->map($pattern, ...$callables)->setMethod('GET|POST|PUT|PATCH|DELETE|OPTIONS');
+        $this->map('GET|POST|PUT|PATCH|DELETE', $pattern, ...$callables);
     }
 
     /**
      * @param string $pattern
      * @param callable[] ...$callables
-     * @return RouterSpecifier
      */
-    public function get(string $pattern, ...$callables) : RouterSpecifier
+    public function duo(string $pattern, ...$callables)
     {
-        return $this->map($pattern, ...$callables)->setMethod('GET');
+        $this->map('GET|POST', $pattern, ...$callables);
     }
 
     /**
      * @param string $pattern
      * @param callable[] ...$callables
-     * @return RouterSpecifier
      */
-    public function post(string $pattern, ...$callables) : RouterSpecifier
+    public function get(string $pattern, ...$callables)
     {
-        return $this->map($pattern, ...$callables)->setMethod('POST');
+        $this->map('GET', $pattern, ...$callables);
     }
 
     /**
      * @param string $pattern
      * @param callable[] ...$callables
-     * @return RouterSpecifier
      */
-    public function put(string $pattern, ...$callables) : RouterSpecifier
+    public function post(string $pattern, ...$callables)
     {
-        return $this->map($pattern, ...$callables)->setMethod('PUT');
+        $this->map('POST', $pattern, ...$callables);
     }
 
     /**
      * @param string $pattern
      * @param callable[] ...$callables
-     * @return RouterSpecifier
      */
-    public function patch(string $pattern, ...$callables) : RouterSpecifier
+    public function put(string $pattern, ...$callables)
     {
-        return $this->map($pattern, ...$callables)->setMethod('PATCH');
+        $this->map('PUT', $pattern, ...$callables);
     }
 
     /**
      * @param string $pattern
      * @param callable[] ...$callables
-     * @return RouterSpecifier
      */
-    public function delete(string $pattern, ...$callables) : RouterSpecifier
+    public function patch(string $pattern, ...$callables)
     {
-        return $this->map($pattern, ...$callables)->setMethod('DELETE');
+        $this->map('PATCH', $pattern, ...$callables);
     }
 
     /**
      * @param string $pattern
      * @param callable[] ...$callables
-     * @return RouterSpecifier
      */
-    public function options(string $pattern, ...$callables) : RouterSpecifier
+    public function delete(string $pattern, ...$callables)
     {
-        return $this->map($pattern, ...$callables)->setMethod('OPTIONS');
+        $this->map('DELETE', $pattern, ...$callables);
     }
 
     /**
@@ -117,10 +110,9 @@ class Router
     {
         $path = trim(preg_replace('{/{2,}}', '/', urldecode($request->getUri()->getPath())), '/');
 
-        foreach ($this->map as $route)
+        foreach ($this->map[$request->getMethod()] ?? [] as $route)
             if (preg_match('{^'.$route['pattern'].'$}i', $path, $attributes))
             {
-                //TODO: add option handler checker :: array_filter($attributes, 'is_string', ARRAY_FILTER_USE_KEY)
                 foreach ($attributes as $attribute_key => $attribute_value)
                     $request = $request->withAttribute($attribute_key, $attribute_value);
 
