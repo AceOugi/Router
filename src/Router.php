@@ -11,6 +11,16 @@ class Router
     protected $map = []; //TODO: import/export
 
     /**
+     * Router constructor.
+     * @param string|null $file_path
+     */
+    public function __construct(string $file_path = null)
+    {
+        if ($file_path)
+            include $file_path;
+    }
+
+    /**
      * @param string $methods
      * @param string $pattern
      * @param callable[] ...$callables
