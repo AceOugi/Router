@@ -133,7 +133,7 @@ class Router
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
-     * @param callable $next
+     * @param callable|null $next
      * @return mixed
      */
     public function __invoke(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, callable $next = null)
