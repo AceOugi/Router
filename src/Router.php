@@ -111,21 +111,6 @@ class Router
     }
 
     /**
-     * @param string $pattern
-     * @param callable[] ...$callables
-     * @return Router
-     */
-    public function group(string $pattern, ...$callables) : Router
-    {
-        $router = new Router();
-        $callables[] = $router;
-
-        $this->any($pattern, ...$callables);
-
-        return $router;
-    }
-
-    /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @return callable[]
      */
