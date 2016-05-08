@@ -138,8 +138,6 @@ class Router
      */
     public function __invoke(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, callable $next = null)
     {
-        $callables = $this->match($request);
-
-        return $next($request, $response, ...$callables);
+        return $next($request, $response, ...$this->match($request));
     }
 }
