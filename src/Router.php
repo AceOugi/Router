@@ -2,22 +2,38 @@
 
 namespace AceOugi;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
-
 class Router
 {
     /** @var array */
-    protected $map = []; //TODO: import/export
+    protected $map = [];
 
     /**
      * Router constructor.
-     * @param string|null $file_path
+     * @param array|null $map
      */
-    public function __construct(string $file_path = null)
+    public function __construct(array $map = null)
     {
-        if ($file_path)
-            include $file_path;
+        if ($map)
+            $this->import($map);
+    }
+
+    /**
+     * @return array
+     */
+    public function export() : array
+    {
+        return $this->map;
+    }
+
+    /**
+     * @param array $map
+     * @return self
+     */
+    public function import(array $map)
+    {
+        $this->map = $map;
+
+        return $this;
     }
 
     /**
@@ -110,12 +126,12 @@ class Router
     }
 
     /**
-     * @param Request $request
-     * @param Response $response
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
      * @param callable $next
      * @return mixed
      */
-    public function __invoke(Request $request, Response $response, callable $next)
+    public function __invoke(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, callable $next = null)
     {
         $path = trim(preg_replace('{/{2,}}', '/', urldecode($request->getUri()->getPath())), '/');
 
