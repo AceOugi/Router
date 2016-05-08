@@ -127,13 +127,11 @@ class Router
 
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param callable $next
-     * @return mixed
+     * @return callable[]
      */
-    public function __invoke(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, callable $next = null)
+    public function match(\Psr\Http\Message\ServerRequestInterface &$request)
     {
-        $path = trim(preg_replace('{/{2,}}', '/', urldecode($request->getUri()->getPath())), '/');
+        $path = ltrim(preg_replace('{/{2,}}', '/', urldecode($request->getUri()->getPath())), '/');
 
         foreach ($this->map[$request->getMethod()] ?? [] as $route)
             if (preg_match('{^'.$route['pattern'].'$}i', $path, $attributes))
@@ -141,9 +139,22 @@ class Router
                 foreach ($attributes as $attribute_key => $attribute_value)
                     $request = $request->withAttribute($attribute_key, $attribute_value);
 
-                return $next($request, $response, ...$route['callables']);
+                return $route['callables'];
             }
 
-        return $next($request, $response);
+        return [];
+    }
+
+    /**
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param callable $next
+     * @return mixed
+     */
+    public function __invoke(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, callable $next = null)
+    {
+        $callables = $this->match($request);
+
+        return $next($request, $response, ...$callables);
     }
 }
