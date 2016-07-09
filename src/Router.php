@@ -32,7 +32,7 @@ class Router
     public function import(array $map)
     {
         foreach ($map as $key => $data)
-            switch ($key)
+            switch (is_numeric($key) ? 'new' : $key)
             {
                 case 'GET'   : $this->map['GET'] = array_merge($this->map['GET'] ?? [], $data); break;
                 case 'POST'  : $this->map['POST'] = array_merge($this->map['POST'] ?? [], $data); break;
