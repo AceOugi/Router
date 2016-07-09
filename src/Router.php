@@ -9,11 +9,11 @@ class Router
 
     /**
      * Router constructor.
-     * @param array|null $map
+     * @param array[] ...$maps
      */
-    public function __construct(array $map = null)
+    public function __construct(array ...$maps)
     {
-        if ($map)
+        foreach ($maps as $map)
             $this->import($map);
     }
 
