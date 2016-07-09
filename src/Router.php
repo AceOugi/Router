@@ -34,11 +34,11 @@ class Router
         foreach ($map as $key => $data)
             switch ($key)
             {
-                case 'GET'   : $this->map['GET'] = array_merge($this->map['GET'], $data); break;
-                case 'POST'  : $this->map['POST'] = array_merge($this->map['POST'], $data); break;
-                case 'PUT'   : $this->map['PUT'] = array_merge($this->map['PUT'], $data); break;
-                case 'PATCH' : $this->map['PATCH'] = array_merge($this->map['PATCH'], $data); break;
-                case 'DELETE': $this->map['DELETE'] = array_merge($this->map['DELETE'], $data); break;
+                case 'GET'   : $this->map['GET'] = array_merge($this->map['GET'] ?? [], $data); break;
+                case 'POST'  : $this->map['POST'] = array_merge($this->map['POST'] ?? [], $data); break;
+                case 'PUT'   : $this->map['PUT'] = array_merge($this->map['PUT'] ?? [], $data); break;
+                case 'PATCH' : $this->map['PATCH'] = array_merge($this->map['PATCH'] ?? [], $data); break;
+                case 'DELETE': $this->map['DELETE'] = array_merge($this->map['DELETE'] ?? [], $data); break;
                 default: $this->map($data['method'], $data['pattern'], ...$data['callables']); break;
             }
 
