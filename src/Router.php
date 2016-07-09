@@ -31,7 +31,7 @@ class Router
      */
     public function import(array $map)
     {
-        $this->map = $map;
+        $this->map = array_merge_recursive($this->map, $map);
 
         return $this;
     }
