@@ -7,14 +7,20 @@ class Router
     /** @var array */
     protected $map = [];
 
+    /** @var callable */
+    protected $resolver;
+
     /**
      * Router constructor.
+     * @param callable|null $resolver
      * @param array[] ...$maps
      */
-    public function __construct(array ...$maps)
+    public function __construct(callable $resolver = null, array ...$maps)
     {
         foreach ($maps as $map)
             $this->import($map);
+
+        $this->resolver = $resolver;
     }
 
     /**
@@ -117,6 +123,10 @@ class Router
     public function delete(string $pattern, ...$callables)
     {
         $this->map('DELETE', $pattern, ...$callables);
+    }
+
+    protected function resolve()
+    {
     }
 
     /**
