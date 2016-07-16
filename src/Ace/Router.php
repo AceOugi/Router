@@ -135,7 +135,7 @@ class Router
      */
     public function match(\Psr\Http\Message\ServerRequestInterface &$request)
     {
-        $path = ltrim(preg_replace('{/{2,}}', '/', urldecode($request->getUri()->getPath())), '/');
+        $path = preg_replace('{/{2,}}', '/', urldecode($request->getUri()->getPath()));
 
         foreach ($this->map[$request->getMethod()] ?? [] as $route)
             if (preg_match('{^'.$route['pattern'].'$}i', $path, $attributes))
